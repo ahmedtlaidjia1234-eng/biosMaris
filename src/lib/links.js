@@ -1,0 +1,1 @@
+export const BackEndLink = 'https://technotes-api.onrender.com';
