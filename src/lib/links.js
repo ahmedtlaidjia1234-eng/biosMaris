@@ -1,1 +1,1 @@
-export const BackEndLink = 'https://technotes-api.onrender.com';
+export const BackEndLink = 'https://biosmaris-back.onrender.com/';
