@@ -162,10 +162,10 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             </div>
           )}
 
-          <Button className="w-full bg-[#d8be7d] hover:bg-[#c9a96b] text-gray-900">
+{/*           <Button className="w-full bg-[#d8be7d] hover:bg-[#c9a96b] text-gray-900">
             <ShoppingCart className="h-4 w-4 mr-2" />
             Commander
-          </Button>
+          </Button> */}
         </div>
       </CardContent>
     </Card>
