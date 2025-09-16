@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,20 @@ import { Plus, Edit, Trash2, Save, X, ArrowLeft } from "lucide-react";
 import { ProductManager, Product } from "@/lib/products";
 import { CustomCursor } from "@/components/CustomCursor";
 import { BackEndLink } from "@/lib/links";
+=======
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Edit, Trash2, Save, X, ArrowLeft } from 'lucide-react';
+import { ProductManager, Product } from '@/lib/products';
+import { CustomCursor } from '@/components/CustomCursor';
+import { BackEndLink } from '@/lib/links';
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
 
 interface AdminProps {
   onBack: () => void;
@@ -33,11 +48,38 @@ export default function Admin({ onBack }: AdminProps) {
   const [password, setPassword] = useState("");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isAddingProduct, setIsAddingProduct] = useState(false);
+<<<<<<< HEAD
   const [email, setEmail] = useState<string>("");
   const [number, setNumber] = useState<string>("");
   const [data, setData] = useState<any>(null);
 
   const API_BASE = `${BackEndLink}/api/admin`;
+=======
+  const [email, setEmail] = useState();
+  const [number, setNumber] = useState();
+  const [data, setData] = useState<any>(null);
+
+  const API_BASE = `${BackEndLink}/api/admin`;
+
+  useEffect(() => {
+    const authState = window.localStorage.getItem('Auth');
+    const storedUser = window.localStorage.getItem('user');
+
+    if (storedUser) {
+      const userObj = JSON.parse(storedUser);
+      setEmail(userObj.email || '');
+      setNumber(userObj.phone ? '0' + userObj.phone : '');
+      setData(userObj);
+    }
+
+    if (authState === 'true') {
+      loadProducts();
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
 
   // 🔹 Load products
   const loadProducts = async () => {
@@ -45,10 +87,11 @@ export default function Admin({ onBack }: AdminProps) {
       const allProducts = await ProductManager.getProducts();
       setProducts(allProducts);
     } catch (err) {
-      console.error("Erreur lors du chargement des produits:", err);
+      console.error('Erreur lors du chargement des produits:', err);
     }
   };
 
+<<<<<<< HEAD
   // 🔹 Load messages
   const loadMessages = async () => {
     try {
@@ -117,8 +160,31 @@ export default function Admin({ onBack }: AdminProps) {
       setEmail(userObj.email || "");
       setNumber(userObj.phone ? "0" + userObj.phone : "");
       setData(userObj);
-    }
+=======
+  const editHandle = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/editAdmin`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, number }),
+      });
 
+      if (res.ok) {
+        const data = await res.json();
+        setEmail(data.admin.email);
+        setNumber(data.admin.email);
+        setData(data.admin);
+        window.localStorage.setItem('user', JSON.stringify(data.admin));
+      } else {
+        return;
+      }
+    } catch (err) {
+      console.log(err);
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
+    }
+  };
+
+<<<<<<< HEAD
     if (authState === "true") {
       loadProducts();
       loadMessages();
@@ -196,13 +262,44 @@ export default function Admin({ onBack }: AdminProps) {
   // 🔹 Delete product
   const handleDeleteProduct = async (qrCode: number) => {
     if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+=======
+  const handleLogin = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.admin.auth === true) {
+        window.localStorage.setItem('Auth', 'true');
+        setIsAuthenticated(true);
+        window.localStorage.setItem('user', JSON.stringify(data.admin));
+        setData(data.admin);
+      } else {
+        alert(data.message || 'Mot de passe incorrect');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+    }
+  };
+
+  const handleDeleteProduct = async (qrCode: number) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
       await ProductManager.deleteProduct(qrCode);
       await loadProducts();
     }
   };
 
+<<<<<<< HEAD
   // 🔹 Save product
   const handleSaveProduct = async (productData: Omit<Product, "id">) => {
+=======
+  const handleSaveProduct = async (productData: Omit<Product, 'id'>) => {
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
     try {
       if (editingProduct) {
         await ProductManager.updateProduct(editingProduct.id, productData);
@@ -221,7 +318,29 @@ export default function Admin({ onBack }: AdminProps) {
     }
   };
 
+<<<<<<< HEAD
   // 🔹 Not logged in
+=======
+  const HandleLogout = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/logout`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.admin.auth === false) {
+          window.localStorage.setItem('Auth', 'false');
+          setIsAuthenticated(false);
+        }
+      }
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
+
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
   if (!isAuthenticated) {
     return (
       <>
@@ -258,7 +377,10 @@ export default function Admin({ onBack }: AdminProps) {
     <>
       <CustomCursor />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+<<<<<<< HEAD
         {/* HEADER */}
+=======
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
         <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
@@ -405,7 +527,10 @@ export default function Admin({ onBack }: AdminProps) {
               </div>
             </TabsContent>
 
+<<<<<<< HEAD
             {/* SETTINGS */}
+=======
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
             <TabsContent value="settings">
               <Card>
                 <CardHeader>
@@ -415,20 +540,34 @@ export default function Admin({ onBack }: AdminProps) {
                   <div>
                     <label className="block text-sm font-medium mb-2">Email de contact</label>
                     <Input
+<<<<<<< HEAD
                       value={email ?? ""}
                       type="email"
                       onChange={(e) => setEmail(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && editHandle()}
+=======
+                      value={email ?? ''}
+                      type="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && editHandle()}
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Numéro de téléphone</label>
                     <Input
+<<<<<<< HEAD
                       value={number ?? ""}
                       type="text"
                       onChange={(e) => setNumber(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && editHandle()}
+=======
+                      value={number ?? ''}
+                      type="number"
+                      onChange={(e) => setNumber(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && editHandle()}
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
                     />
                   </div>
 
@@ -464,6 +603,7 @@ interface ProductFormDialogProps {
 
 function ProductFormDialog({ product, isOpen, onClose, onSave }: ProductFormDialogProps) {
   const [formData, setFormData] = useState({
+<<<<<<< HEAD
     name: "",
     description: "",
     price: "",
@@ -473,6 +613,17 @@ function ProductFormDialog({ product, isOpen, onClose, onSave }: ProductFormDial
     ingredients: [""],
     benefits: [""],
     usage: "",
+=======
+    name: '',
+    description: '',
+    price: '',
+    category: '',
+    images: [''],
+    qrCode: '',
+    ingredients: [''],
+    benefits: [''],
+    usage: '',
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
   });
 
   useEffect(() => {
@@ -484,6 +635,7 @@ function ProductFormDialog({ product, isOpen, onClose, onSave }: ProductFormDial
         category: product.category,
         images: product.images || [""],
         qrCode: product.qrCode,
+<<<<<<< HEAD
         ingredients: product.ingredients || [""],
         benefits: product.benefits || [""],
         usage: product.usage || "",
@@ -499,6 +651,23 @@ function ProductFormDialog({ product, isOpen, onClose, onSave }: ProductFormDial
         ingredients: [""],
         benefits: [""],
         usage: "",
+=======
+        ingredients: product.ingredients || [''],
+        benefits: product.benefits || [''],
+        usage: product.usage || '',
+      });
+    } else {
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        category: '',
+        images: [''],
+        qrCode: '',
+        ingredients: [''],
+        benefits: [''],
+        usage: '',
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
       });
     }
   }, [product]);
@@ -514,15 +683,26 @@ function ProductFormDialog({ product, isOpen, onClose, onSave }: ProductFormDial
     onSave(cleanedData);
   };
 
+<<<<<<< HEAD
   const addArrayItem = (field: "images" | "ingredients" | "benefits") => {
     setFormData((prev) => ({
       ...prev,
       [field]: [...prev[field], ""],
+=======
+  const addArrayItem = (field: 'images' | 'ingredients' | 'benefits') => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: [...prev[field], ''],
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
     }));
   };
 
   const updateArrayItem = (
+<<<<<<< HEAD
     field: "images" | "ingredients" | "benefits",
+=======
+    field: 'images' | 'ingredients' | 'benefits',
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
     index: number,
     value: string
   ) => {
@@ -532,7 +712,11 @@ function ProductFormDialog({ product, isOpen, onClose, onSave }: ProductFormDial
     }));
   };
 
+<<<<<<< HEAD
   const removeArrayItem = (field: "images" | "ingredients" | "benefits", index: number) => {
+=======
+  const removeArrayItem = (field: 'images' | 'ingredients' | 'benefits', index: number) => {
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
     setFormData((prev) => ({
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index),
@@ -543,7 +727,11 @@ function ProductFormDialog({ product, isOpen, onClose, onSave }: ProductFormDial
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
+<<<<<<< HEAD
           <DialogTitle>{product ? "Modifier le produit" : "Ajouter un produit"}</DialogTitle>
+=======
+          <DialogTitle>{product ? 'Modifier le produit' : 'Ajouter un produit'}</DialogTitle>
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
         </DialogHeader>
 
         <div className="space-y-4">
@@ -589,9 +777,13 @@ function ProductFormDialog({ product, isOpen, onClose, onSave }: ProductFormDial
             <label className="block text-sm font-medium mb-2">Description</label>
             <Textarea
               value={formData.description}
+<<<<<<< HEAD
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, description: e.target.value }))
               }
+=======
+              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+>>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
               rows={3}
             />
           </div>
