@@ -144,7 +144,7 @@ const API_BASE = `${BackEndLink}/api/admin`;
               </h2>
               <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-lg">
                 Depuis notre création, nous nous engageons à fournir des compléments alimentaires 
-                de la plus haute qualité, issus des richesses de la mer.
+                de la plus haute qualité, issus des richesses de la mer .
               </p>
             </div>
 
@@ -172,11 +172,7 @@ const API_BASE = `${BackEndLink}/api/admin`;
                     <div className="text-2xl font-bold text-[#d8be7d]">1000+</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Clients satisfaits</div>
                   </div>
-<<<<<<< HEAD
                   {/* <div className="text-center p-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-lg">
-=======
-{/*                   <div className="text-center p-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-lg">
->>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
                     <div className="text-2xl font-bold text-[#d8be7d]">100%</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Naturel</div>
                   </div> */}
@@ -214,11 +210,7 @@ const API_BASE = `${BackEndLink}/api/admin`;
                     <Leaf className="h-8 w-8 text-[#d8be7d]" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-<<<<<<< HEAD
                      Naturel
-=======
-                    Naturel
->>>>>>> 0a9f2a109678500bc2580469467cde833fb727ca
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400">
                     Tous nos produits sont issus d'ingrédients naturels d'origine marine, 
