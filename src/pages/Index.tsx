@@ -27,7 +27,6 @@ const API_BASE = `${BackEndLink}/api/admin`;
     if(res.ok){
       const data = await res.json()
         setAdminData(data.admin)
-        console.log(data)
       }
     }catch(err){
       console.log(err)

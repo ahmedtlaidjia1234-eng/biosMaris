@@ -37,7 +37,6 @@ export const ContactForm = () => {
       });
 
       const text = await res.text();
-      console.log("Raw response:", text);
 
       if (!res.ok) {
         throw new Error(`Erreur serveur: ${res.status} ${res.statusText} → ${text}`);
