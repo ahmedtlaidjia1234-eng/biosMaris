@@ -11,6 +11,7 @@ import { ProductManager, Product } from "@/lib/products";
 import { CustomCursor } from "@/components/CustomCursor";
 import { BackEndLink } from "@/lib/links";
 
+/* -------------------- TYPES -------------------- */
 interface AdminProps {
   onBack: () => void;
 }
@@ -26,6 +27,7 @@ interface ContactMessage {
   read: boolean;
 }
 
+/* -------------------- ADMIN COMPONENT -------------------- */
 export default function Admin({ onBack }: AdminProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
@@ -40,6 +42,7 @@ export default function Admin({ onBack }: AdminProps) {
 
   const API_BASE = `${BackEndLink}/api/admin`;
 
+  /* -------------------- LOAD INITIAL DATA -------------------- */
   useEffect(() => {
     const authState = window.localStorage.getItem("Auth");
     const storedUser = window.localStorage.getItem("user");
@@ -60,7 +63,7 @@ export default function Admin({ onBack }: AdminProps) {
     }
   }, []);
 
-  // Load products
+  /* -------------------- LOAD PRODUCTS -------------------- */
   const loadProducts = async () => {
     try {
       const allProducts = await ProductManager.getProducts();
@@ -70,46 +73,41 @@ export default function Admin({ onBack }: AdminProps) {
     }
   };
 
-  // Load messages
+  /* -------------------- LOAD MESSAGES -------------------- */
   const loadMessages = async () => {
     try {
       const res = await fetch(`${BackEndLink}/api/contact/list`);
       if (res.ok) {
-        const messages = await res.json();
-        setMessages(messages);
+        const msgs = await res.json();
+        setMessages(msgs);
       }
     } catch (err) {
       console.error("Erreur lors du chargement des messages:", err);
     }
   };
 
-  const saveMessages = async (updatedMessages: ContactMessage[]) => {
-    localStorage.setItem("bios_maris_messages", JSON.stringify(updatedMessages));
-    setMessages(updatedMessages);
-  };
-
-  // Mark message as read
-  const handleMarkAsRead = async (id: string, email: string, subject: string) => {
+  /* -------------------- MARK MESSAGE AS READ -------------------- */
+  const handleMarkAsRead = async (id: string, email: string) => {
     const updatedMessages = messages.map((m) =>
       m.id === id ? { ...m, read: true } : m
     );
 
     try {
-      const fet = await fetch(`${BackEndLink}/api/contact/updatemessage/${id}`, {
+      const fet = await fetch(`${BackEndLink}/api/contact/updatemessage`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, subject, read: true }),
+        body: JSON.stringify({ email }),
       });
 
       if (fet.ok) {
-        saveMessages(updatedMessages);
+        setMessages(updatedMessages);
       }
     } catch (err) {
       console.error("Error updating message:", err);
     }
   };
 
-  // Delete message
+  /* -------------------- DELETE MESSAGE -------------------- */
   const handleDeleteMessage = async (id: string) => {
     if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ?")) return;
     try {
@@ -118,16 +116,17 @@ export default function Admin({ onBack }: AdminProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
+
       if (del.ok) {
         const updatedMessages = messages.filter((m) => m.id !== id);
-        saveMessages(updatedMessages);
+        setMessages(updatedMessages);
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  // Edit settings
+  /* -------------------- EDIT SETTINGS -------------------- */
   const editHandle = async () => {
     try {
       const res = await fetch(`${API_BASE}/editAdmin`, {
@@ -148,7 +147,7 @@ export default function Admin({ onBack }: AdminProps) {
     }
   };
 
-  // Login
+  /* -------------------- LOGIN -------------------- */
   const handleLogin = async () => {
     try {
       const res = await fetch(`${API_BASE}/login`, {
@@ -172,7 +171,7 @@ export default function Admin({ onBack }: AdminProps) {
     }
   };
 
-  // Logout
+  /* -------------------- LOGOUT -------------------- */
   const HandleLogout = async () => {
     try {
       const res = await fetch(`${API_BASE}/logout`, {
@@ -192,7 +191,7 @@ export default function Admin({ onBack }: AdminProps) {
     }
   };
 
-  // Delete product
+  /* -------------------- DELETE PRODUCT -------------------- */
   const handleDeleteProduct = async (qrCode: number) => {
     if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
       await ProductManager.deleteProduct(qrCode);
@@ -200,7 +199,7 @@ export default function Admin({ onBack }: AdminProps) {
     }
   };
 
-  // Save product
+  /* -------------------- SAVE PRODUCT -------------------- */
   const handleSaveProduct = async (productData: Omit<Product, "id">) => {
     try {
       if (editingProduct) {
@@ -220,6 +219,7 @@ export default function Admin({ onBack }: AdminProps) {
     }
   };
 
+  /* -------------------- LOGIN SCREEN -------------------- */
   if (!isAuthenticated) {
     return (
       <>
@@ -251,12 +251,13 @@ export default function Admin({ onBack }: AdminProps) {
     );
   }
 
-  // 🔹 Logged in admin panel
+  /* -------------------- ADMIN PANEL -------------------- */
   return (
     <>
       <CustomCursor />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
         <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          {/* HEADER */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
               Administration Bios Maris
@@ -321,7 +322,7 @@ export default function Admin({ onBack }: AdminProps) {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleMarkAsRead(message.id, message.email, message.subject)}
+                              onClick={() => handleMarkAsRead(message.id, message.email)}
                             >
                               Marquer comme lu
                             </Button>
@@ -358,10 +359,254 @@ export default function Admin({ onBack }: AdminProps) {
             </TabsContent>
 
             {/* PRODUCTS */}
-            {/* ... باقي الكود تاع المنتجات والإعدادات نفسو ... */}
+            <TabsContent value="products" className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {products.map((product) => (
+                  <Card key={product.id} className="relative">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <CardTitle className="text-lg">{product.name}</CardTitle>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setEditingProduct(product)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteProduct(product.qrCode)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {product.images?.[0] && (
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="w-full h-32 object-cover rounded mb-3"
+                        />
+                      )}
+                      <Badge className="mb-2">{product.category}</Badge>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        {product.description}
+                      </p>
+                      <p className="font-semibold">{product.price} DA</p>
+                      <p className="text-xs text-gray-500">QR: {product.qrCode}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            {/* SETTINGS */}
+            <TabsContent value="settings">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Paramètres du site</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Email de contact</label>
+                    <Input
+                      value={email ?? ""}
+                      type="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && editHandle()}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Numéro de téléphone</label>
+                    <Input
+                      value={number ?? ""}
+                      type="text"
+                      onChange={(e) => setNumber(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && editHandle()}
+                    />
+                  </div>
+
+                  <Button onClick={editHandle}>Sauvegarder les paramètres</Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
           </Tabs>
+
+          {/* PRODUCT FORM DIALOG */}
+          <ProductFormDialog
+            product={editingProduct}
+            isOpen={!!editingProduct || isAddingProduct}
+            onClose={() => {
+              setEditingProduct(null);
+              setIsAddingProduct(false);
+            }}
+            onSave={handleSaveProduct}
+          />
         </div>
       </div>
     </>
+  );
+}
+
+/* -------------------- PRODUCT FORM -------------------- */
+interface ProductFormDialogProps {
+  product: Product | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (product: Omit<Product, "id">) => void;
+}
+
+function ProductFormDialog({ product, isOpen, onClose, onSave }: ProductFormDialogProps) {
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    category: "",
+    images: [""],
+    qrCode: "",
+    ingredients: [""],
+    benefits: [""],
+    usage: "",
+  });
+
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        name: product.name,
+        description: product.description,
+        price: String(product.price),
+        category: product.category,
+        images: product.images || [""],
+        qrCode: product.qrCode,
+        ingredients: product.ingredients || [""],
+        benefits: product.benefits || [""],
+        usage: product.usage || "",
+      });
+    } else {
+      setFormData({
+        name: "",
+        description: "",
+        price: "",
+        category: "",
+        images: [""],
+        qrCode: "",
+        ingredients: [""],
+        benefits: [""],
+        usage: "",
+      });
+    }
+  }, [product]);
+
+  const handleSubmit = () => {
+    const cleanedData = {
+      ...formData,
+      price: Number(formData.price),
+      images: formData.images.filter((img) => img.trim()),
+      ingredients: formData.ingredients.filter((ing) => ing.trim()),
+      benefits: formData.benefits.filter((ben) => ben.trim()),
+    };
+    onSave(cleanedData);
+  };
+
+  const addArrayItem = (field: "images" | "ingredients" | "benefits") => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: [...prev[field], ""],
+    }));
+  };
+
+  const updateArrayItem = (field: "images" | "ingredients" | "benefits", index: number, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: prev[field].map((item, i) => (i === index ? value : item)),
+    }));
+  };
+
+  const removeArrayItem = (field: "images" | "ingredients" | "benefits", index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: prev[field].filter((_, i) => i !== index),
+    }));
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{product ? "Modifier le produit" : "Nouveau produit"}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <Input
+            placeholder="Nom du produit"
+            value={formData.name}
+            onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+          />
+          <Textarea
+            placeholder="Description"
+            value={formData.description}
+            onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+          />
+          <Input
+            type="number"
+            placeholder="Prix"
+            value={formData.price}
+            onChange={(e) => setFormData((prev) => ({ ...prev, price: e.target.value }))}
+          />
+          <Input
+            placeholder="Catégorie"
+            value={formData.category}
+            onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
+          />
+          <Input
+            placeholder="QR Code"
+            value={formData.qrCode}
+            onChange={(e) => setFormData((prev) => ({ ...prev, qrCode: e.target.value }))}
+          />
+
+          {/* Arrays: Images, Ingredients, Benefits */}
+          {(["images", "ingredients", "benefits"] as const).map((field) => (
+            <div key={field}>
+              <label className="block text-sm font-medium mb-2 capitalize">{field}</label>
+              {formData[field].map((item, i) => (
+                <div key={i} className="flex gap-2 mb-2">
+                  <Input
+                    placeholder={`${field} ${i + 1}`}
+                    value={item}
+                    onChange={(e) => updateArrayItem(field, i, e.target.value)}
+                  />
+                  <Button type="button" variant="outline" size="icon" onClick={() => removeArrayItem(field, i)}>
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button type="button" variant="outline" onClick={() => addArrayItem(field)}>
+                Ajouter {field.slice(0, -1)}
+              </Button>
+            </div>
+          ))}
+
+          <Textarea
+            placeholder="Utilisation"
+            value={formData.usage}
+            onChange={(e) => setFormData((prev) => ({ ...prev, usage: e.target.value }))}
+          />
+
+          <div className="flex gap-2 justify-end">
+            <Button variant="outline" onClick={onClose}>
+              Annuler
+            </Button>
+            <Button onClick={handleSubmit}>
+              <Save className="h-4 w-4 mr-2" />
+              Sauvegarder
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
