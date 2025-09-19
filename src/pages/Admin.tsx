@@ -290,73 +290,80 @@ export default function Admin({ onBack }: AdminProps) {
 
             {/* MESSAGES */}
             <TabsContent value="messages" className="space-y-6">
-              {messages.length > 0 ? (
-                <div className="space-y-4">
-                  {messages.map((message) => (
-                    <Card
-                      key={message.id}
-                      className={`hover:shadow-lg transition-shadow ${
-                        !message.read ? "border-yellow-400 bg-yellow-50" : ""
-                      }`}
-                    >
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <CardTitle className="text-lg">{message.subject}</CardTitle>
-                            <p className="text-sm text-gray-600">
-                              De: {message.name} ({message.email})
-                            </p>
-                          </div>
-                          <span className="text-xs text-gray-500">
-                            {new Date(message.createdAt).toLocaleString("fr-FR")}
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm mb-3">
-                          <strong>Téléphone:</strong> {message.phone}
-                        </p>
-                        <p className="text-sm bg-gray-50 p-3 rounded">{message.message}</p>
-                        <div className="flex gap-2 pt-2">
-                          {!message.read && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleMarkAsRead(message.id, message.email)}
-                            >
-                              Marquer comme lu
-                            </Button>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => handleDeleteMessage(message.id)}
-                          >
-                            Supprimer
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              (window.location.href = `mailto:${message.email}?subject=Re: ${message.subject}`)
-                            }
-                          >
-                            Répondre
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-gray-600">Aucun message reçu.</p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Les messages envoyés via le formulaire de contact apparaîtront ici.
-                  </p>
-                </div>
+  {messages.length > 0 ? (
+    <div className="space-y-4">
+      {messages.map((message) => (
+        <Card
+          key={message.id}
+          className={`hover:shadow-lg transition-shadow ${
+            !message.read ? "border-yellow-400 bg-yellow-50" : ""
+          }`}
+        >
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="min-w-0">
+                <CardTitle className="text-base sm:text-lg break-words">
+                  {message.subject}
+                </CardTitle>
+                <p className="text-sm text-gray-600 break-words">
+                  De: {message.name} ({message.email})
+                </p>
+              </div>
+              <span className="text-xs text-gray-500 shrink-0">
+                {new Date(message.createdAt).toLocaleString("fr-FR")}
+              </span>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm mb-3 break-words">
+              <strong>Téléphone:</strong> {message.phone}
+            </p>
+            <p className="text-sm bg-gray-50 p-3 rounded break-words">
+              {message.message}
+            </p>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {!message.read && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    handleMarkAsRead(message.id, message.email)
+                  }
+                >
+                  Marquer comme lu
+                </Button>
               )}
-            </TabsContent>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => handleDeleteMessage(message.id)}
+              >
+                Supprimer
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  (window.location.href = `mailto:${message.email}?subject=Re: ${message.subject}`)
+                }
+              >
+                Répondre
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  ) : (
+    <div className="text-center py-12">
+      <p className="text-gray-600">Aucun message reçu.</p>
+      <p className="text-sm text-gray-500 mt-2">
+        Les messages envoyés via le formulaire de contact apparaîtront ici.
+      </p>
+    </div>
+  )}
+</TabsContent>
+
 
             {/* PRODUCTS */}
             <TabsContent value="products" className="space-y-4">
