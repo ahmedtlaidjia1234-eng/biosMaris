@@ -340,7 +340,7 @@ export default function Admin({ onBack }: AdminProps) {
               >
                 Supprimer
               </Button>
-              <Button
+              {/* <Button
                 size="sm"
                 variant="outline"
                 onClick={() =>
@@ -348,7 +348,7 @@ export default function Admin({ onBack }: AdminProps) {
                 }
               >
                 Répondre
-              </Button>
+              </Button> */}
             </div>
           </CardContent>
         </Card>
