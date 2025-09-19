@@ -303,10 +303,10 @@ export default function Admin({ onBack }: AdminProps) {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div className="min-w-0">
                 <CardTitle className="text-base sm:text-lg break-words">
-                  {message.subject}
+                  {message.sujet}
                 </CardTitle>
                 <p className="text-sm text-gray-600 break-words">
-                  De: {message.name} ({message.email})
+                  De: {message.nom} ({message.email})
                 </p>
               </div>
               <span className="text-xs text-gray-500 shrink-0">
