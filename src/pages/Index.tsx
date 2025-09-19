@@ -412,7 +412,7 @@ const API_BASE = `${BackEndLink}/api/admin`;
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900 dark:text-white">Téléphone</h3>
-                        <p className="text-gray-600 dark:text-gray-400">0{adminData?.phone}</p>
+                        <p className="text-gray-600 dark:text-gray-400">{adminData?.phone}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -438,15 +438,15 @@ const API_BASE = `${BackEndLink}/api/admin`;
                     </h3>
                     <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                       <div className="flex justify-between">
-                        <span>Dimanche - Jeudi:</span>
+                        <span>Samedi - Mercredi:</span>
                         <span>8h00 - 17h00</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Vendredi:</span>
+                        <span>Jeudi:</span>
                         <span>8h00 - 12h00</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Samedi:</span>
+                        <span>Vendredi:</span>
                         <span>Fermé</span>
                       </div>
                     </div>
@@ -499,7 +499,7 @@ const API_BASE = `${BackEndLink}/api/admin`;
                 <h4 className="font-semibold mb-4 text-[#d8be7d]">Contact</h4>
                 <div className="space-y-2 text-sm text-gray-400">
                   <div>{adminData?.email}</div>
-                  <div>0{adminData?.phone}</div>
+                  <div>{adminData?.phone}</div>
                   <div>Algérie</div>
                 </div>
               </div>
