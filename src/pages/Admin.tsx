@@ -283,7 +283,7 @@ export default function Admin({ onBack }: AdminProps) {
             <TabsList>
               <TabsTrigger value="products">Produits</TabsTrigger>
               <TabsTrigger value="messages">
-                Messages ({messages.filter((m) => !m.read).length} non lus)
+                Messages ({messages.filter((m) => !m.read).length}/{messages.length})
               </TabsTrigger>
               <TabsTrigger value="settings">Paramètres</TabsTrigger>
             </TabsList>
