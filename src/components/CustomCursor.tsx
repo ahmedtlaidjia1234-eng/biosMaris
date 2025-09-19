@@ -36,21 +36,26 @@ export const CustomCursor = () => {
   return (
     <div className="fixed pointer-events-none z-50 mix-blend-difference" style={{zIndex : '99'}}>
       <div
-        className={`absolute rounded-full bg-white transition-all duration-150 ease-out ${
+        className={`absolute rounded-full bg-white transition-all  ease-out ${
           isClicking ? 'w-4 h-4' : 'w-6 h-6'
         }`}
         style={{
           left: position.x - (isClicking ? 8 : 12),
           top: position.y - (isClicking ? 8 : 12),
+          transitionDuration : "1s"
         }}
       />
-      <div
+   
+
+        <div
         className="absolute w-1 h-1 bg-white rounded-full"
         style={{
           left: position.x - 2,
           top: position.y - 2,
         }}
       />
+      
+      
     </div>
   );
 };
