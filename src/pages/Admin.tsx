@@ -88,6 +88,7 @@ export default function Admin({ onBack }: AdminProps) {
 
   /* -------------------- MARK MESSAGE AS READ -------------------- */
   const handleMarkAsRead = async (id: string, email: string) => {
+    console.log(id)
     const updatedMessages = messages.map((m) =>
       m.id === id ? { ...m, read: true } : m
     );
@@ -96,7 +97,7 @@ export default function Admin({ onBack }: AdminProps) {
       const fet = await fetch(`${BackEndLink}/api/contact/updatemessage`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ id }),
       });
 
       if (fet.ok) {
