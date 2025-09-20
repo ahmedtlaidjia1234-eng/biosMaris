@@ -50,7 +50,7 @@ export default function Admin({ onBack }: AdminProps) {
     if (storedUser) {
       const userObj = JSON.parse(storedUser);
       setEmail(userObj.email || "");
-      setNumber(userObj.phone ? "0" + userObj.phone : "");
+      setNumber(userObj.phone ? userObj.phone : "");
       setData(userObj);
     }
 
